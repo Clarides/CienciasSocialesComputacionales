@@ -1,0 +1,27 @@
+
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+
+M34_202103_eph <- read_csv("Documents/Diplomatura IDAES/TPs/TP Final/M34_202103_eph.csv")
+View(M34_202103_eph)
+
+summary(M34_202103_eph)
+
+
+
+#Creamos una base de exploración, quitando la variable código, filtrando los ingresos negativos ya que no debería haber ingresos negativos y cambiando las edades individuales por rangos para una exporación que nos permita inferir algunas conclusiones antes de modelizar. 
+
+Base_exploracion <- M34_202103_eph %/%
+  select (NRO_HOGAR, AGLOMERADO, NIVEL_ED, CH03, CH04, CH06, CH07, PP04A, CAT_OCUP, INTENSI, PP3E_TOT, CATEGORIA, CALIFICACION, P21) %/%
+    filter (P21 >= "0") %/%
+      mutate(edad_rango = case_when(CH06 %in% c(0:19)   ~ "0 a 19",
+                                    CH06 %in% c(20:29) ~ "20 a 29",
+                                    CH06 %in% c(30:39) ~ "30 a 39",
+                                    CH06 %in% c(40:49) ~ "40 a 49",
+                                    CH06 %in% c(50:59) ~ "50 a 59",
+                                    CH06 %in% c(60:74) ~ "60 a 74",
+                                    CH06 > 75 ~ "Mayor a 75"))
